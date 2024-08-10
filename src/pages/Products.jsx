@@ -1,0 +1,124 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+
+function Products() {
+    const [id, setId] = useState(null);
+    const [products, setProducts] = useState([]);
+    const [showConfirm, setShowConfirm] = useState(false);
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const navigate = useNavigate();
+
+    const fetchProducts = async () => {
+        try {
+            const token = localStorage.getItem("token");            
+            console.log('fazendo requisição');
+            const response = await axios.get("https://interview.t-alpha.com.br/api/products/get-all-products", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            console.log("responseeee: " + JSON.stringify(response));
+            setProducts(response.data.data.products);
+            
+        } catch (err) {
+            setError("Erro ao buscar produtos.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+    if (loading) return <p>Carregando produtos...</p>;
+    if (error) return <p>{error}</p>;
+
+    const handleDeleteProduct = async (idProduto) => {
+        try {
+            const token = localStorage.getItem("token");
+            await axios.delete(`https://interview.t-alpha.com.br/api/products/delete-product/${idProduto}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            fetchProducts();
+            //navigate("/all-products");
+        } catch (err) {
+            setError("Erro ao excluir o produto. Tente novamente mais tarde.");
+        }
+    };
+
+
+    return (
+        <div className="p-8">
+            <h1>Lista de Produtos</h1>
+            
+            <ul className="grid grid-cols-3 gap-4">
+                {products.map((product) => (
+                    <li key={product.id} className="relative flex flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
+                        <div className="p-6">
+                        <div className="mb-2 flex items-center justify-between">
+                            <p className="block font-sans text-base font-medium leading-relaxed text-blue-gray-900 antialiased">
+                            {product.name ?? 'Produto'}
+                            </p>
+                            <p className="block font-sans text-base font-medium leading-relaxed text-blue-gray-900 antialiased">
+                            ${product.price ?? 0}
+                            </p>
+                        </div>
+                        <p className="block truncate text-ellipsis font-sans text-sm font-normal leading-normal text-gray-700 antialiased opacity-75">
+                            {product.description}
+                        </p>
+                        </div>
+                        <div className="px-3">
+                            <button
+                                onClick = {() => navigate(`/one-product/${product.id}`)}
+                                className="select-none rounded-lg bg-blue-gray-900/10 py-3 px-3 text-center align-middle font-sans text-xs font-bold text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                                type="button"
+                            >
+                                Detalhes
+                            </button>
+                            <button
+                                onClick = {() => navigate(`/update-product/${product.id}`)}
+                                className="select-none rounded-lg bg-blue-gray-900/10 py-3 px-6 text-center align-middle font-sans text-xs font-bold text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                                type="button"
+                            >
+                                Editar
+                            </button>
+                            <button
+                                onClick = {() => setShowConfirm(true)}
+                                className="select-none rounded-lg bg-blue-gray-900/10 py-3 px-6 text-center align-middle font-sans text-xs font-bold text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                                type="button"
+                            >
+                                Deletar
+                            </button>
+
+                            {showConfirm && (
+                                <div>
+                                    <p>Você tem certeza que deseja excluir este produto?</p>
+                                    <button onClick={() => handleDeleteProduct(product.id)}>Sim</button>
+                                    <button onClick={() => setShowConfirm(false)}>Não</button>
+                                </div>
+                            )}
+
+                        </div>
+                    </li>
+                ))}
+            </ul>
+
+            <button 
+                onClick={() => {navigate("/create-product")}}
+                className="select-none rounded-lg bg-blue-gray-900/10 py-3 px-6 text-center align-middle font-sans text-xs font-bold text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                type="button">
+                    Criar Produto
+            </button>
+
+        </div>
+    );
+}
+
+export default Products;
