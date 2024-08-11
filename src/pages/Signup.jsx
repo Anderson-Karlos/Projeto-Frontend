@@ -99,68 +99,68 @@ function Signup() {
         </div>
         */
 
-        <form>
-                <div class="space-y-12">
-    <div class="border-b border-gray-900/10 pb-12">
-      <h1 class="text-base font-semibold leading-7 text-gray-900">Cadastrar Usuário</h1>
+    <div>
+        <div className="flex flex-col px-10 py-5">        
+        <div className="border-b border-gray-900/10 pb-12 flex flex-col items-center w-full">
+            <h1 className="text-4xl font-semibold leading-7 mt-5 text-gray-900 self-center">Cadastrar Usuário</h1>
 
-      <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="mt-12 gap-y-8 flex flex-col w-1/2">
 
-        <div class="sm:col-span-4">
-          <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Nome:</label>
-          <div class="mt-2">
+        <div className="sm:col-span-4">
+          <label for="name" className="block text-sm font-medium leading-6 text-gray-900">Nome:</label>
+          <div className="mt-2">
             <input 
                 type="text" 
                 name="name"
                 value={name} 
                 onChange={(e) => setName(e.target.value)} 
-                class=//"block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+                className=//"block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
                 "w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400"
                 />
           </div>
         </div>
 
-        <div class="sm:col-span-4">
-          <label for="Description" class="block text-sm font-medium leading-6 text-gray-900">CPF / CNPJ:</label>
-          <div class="mt-2">
+        <div className="sm:col-span-4">
+          <label for="Description" className="block text-sm font-medium leading-6 text-gray-900">CPF / CNPJ:</label>
+          <div className="mt-2">
             <input 
                 type="text"
                 value = {taxNumber}
                 onChange = {(e) => {setTaxNumber(e.target.value)}} 
-                class="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
+                className="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
           </div>
         </div>
 
-        <div class="sm:col-span-4">
-          <label for="price" class="block text-sm font-medium leading-6 text-gray-900">E-mail:</label>
-          <div class="mt-2">
+        <div className="sm:col-span-4">
+          <label for="price" className="block text-sm font-medium leading-6 text-gray-900">E-mail:</label>
+          <div className="mt-2">
             <input 
                 type = "text"
                 value = { mail }
                 onChange = {(e) => { setMail(e.target.value)}} 
-                class="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
+                className="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
           </div>
         </div>
 
-        <div class="sm:col-span-4">
-          <label for="price" class="block text-sm font-medium leading-6 text-gray-900">Telefone:</label>
-          <div class="mt-2">
+        <div className="sm:col-span-4">
+          <label for="price" className="block text-sm font-medium leading-6 text-gray-900">Telefone:</label>
+          <div className="mt-2">
             <input 
                 type="text"
                 value={phone}
                 onChange={ (e) => {setPhone(e.target.value)}}
-                class="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
+                className="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
           </div>
         </div>
 
-        <div class="sm:col-span-4">
-          <label for="stock" class="block text-sm font-medium leading-6 text-gray-900">Senha:</label>
-          <div class="mt-2">
+        <div className="sm:col-span-4">
+          <label for="stock" className="block text-sm font-medium leading-6 text-gray-900">Senha:</label>
+          <div className="mt-2">
             <input 
                 type="password"
                 value={password}
                 onChange={(e) => {setPassword(e.target.value)}}
-                class="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
+                className="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
           </div>
         </div>
       </div>
@@ -182,7 +182,7 @@ function Signup() {
         {loading ? "Cadastrando..." : "Cadastrar Usuário"}
     </button>
   </div>
-</form>
+</div>
     );
 }
 export default Signup;

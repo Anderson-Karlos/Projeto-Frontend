@@ -89,12 +89,12 @@ function DetailProduct() {
         </div>
         */
 
-        <form>
-                <div class="space-y-12">
-    <div class="border-b border-gray-900/10 pb-12">
-      <h1 class="text-base font-semibold leading-7 text-gray-900">Detalhes do Produto</h1>
+    <div>
+        <div className="flex flex-col px-10 py-5">        
+        <div className="border-b border-gray-900/10 pb-12 flex flex-col items-center w-full">
+            <h1 className="text-4xl font-semibold leading-7 mt-5 text-gray-900 self-center">Detalhes do Produto</h1>
 
-      <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="mt-12 gap-y-8 flex flex-col w-1/2">
 
         <div class="sm:col-span-4">
           <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Nome:</label>
@@ -168,7 +168,7 @@ function DetailProduct() {
             )}
 
   </div>
-</form>
+</div>
 
     );
 }

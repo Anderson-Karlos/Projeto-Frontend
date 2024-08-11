@@ -1,16 +1,30 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { json, useNavigate, useParams } from "react-router-dom";
+import ModalComponent from "../components/ModalComponent";
 
 function UpdateProduct() {
     const { id } = useParams();
-    const [name, setName] = useState(null);
-    const [description, setDescription] = useState(null);
-    const [price, setPrice] = useState(null);
-    const [stock, setStock] = useState(null);
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [price, setPrice] = useState(0);
+    const [stock, setStock] = useState(0);
 
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState('');
+    const dialogRef = useRef(null);
+    const [mensagem, setMensagem] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+
+    const openModal = (objMensagem) => {
+        setMensagem(objMensagem)
+        dialogRef.current.showModal();
+    }
+
+    const closeModal = () => {
+        dialogRef.current.close()
+    }
 
     const navigate = useNavigate();
 
@@ -36,20 +50,25 @@ function UpdateProduct() {
         };
 
         fetchProduct();
-    }, [id]);
+
+        if (isModalVisible && dialogRef.current) {
+            dialogRef.current.showModal(); 
+          }
+
+    }, [id, isModalVisible]);
 
     const handleUpdateProduct = async () => {
         setLoading(true);
-        setError(null);
+        setError('');
 
         const dados = {
             name: name,
             description: description,
-            price:parseFloat(price),
+            price: parseFloat(price),
             stock: Number(stock) 
         }
 
-        console.log("Entrou aqui");
+    console.log("Entrou aqui");
 
         console.log("dados: " + JSON.stringify(dados))
 
@@ -65,10 +84,11 @@ function UpdateProduct() {
             }
         );
 
-        console.log("Response: " + JSON.stringify(response));
+        const obj = {titulo: 'Anderson', mensagem: 'é viado', rota: '/all-products'};  console.log("Response: " + JSON.stringify(response));
 
-        if (response.status == 200) {
-            navigate("/all-products");
+        if (response.status == 204) {                                   
+            console.log("deu certo")                    
+            openModal(obj)
         } else {
             setError("Erro ao atualizar produto. Por favor, tente novamente.");
         }
@@ -79,127 +99,99 @@ function UpdateProduct() {
             setLoading(false);
         }
     };
+    
 
     return (
-        /*
-        <div>
-            <span>Editar Produto</span>
-            {error && <p style={{ color: "red" }}>{error}</p>}
 
-            <h2>Nome:</h2>
-            <input
-                type="text" 
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-            />
+    <div className="flex flex-col px-10 py-5">        
+        <div className="border-b border-gray-900/10 pb-12 flex flex-col items-center w-full">
+            <h1 className="text-4xl font-semibold leading-7 mt-5 text-gray-900 self-center">Atualizar Produto</h1>
 
-            <h2>Descrição:</h2>
-            <input
-                type="text"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-            />
+            <div className="mt-12 gap-y-8 flex flex-col w-1/2">
 
-            <h2>Preço:</h2>
-            <input 
-                type="text"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-            />
+                <div className="sm:col-span-4">
+                    <span className="block text-md font-medium leading-6 text-gray-900">Nome:</span>
+                    <div className="mt-2">
+                        <input 
+                            type="text" 
+                            name="name"
+                            value={name} 
+                            onChange={(e) => setName(e.target.value)} 
+                            className="w-full text-md px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
+                    </div>
+                </div>
 
-            <h2>Estoque:</h2>
-            <input 
-                type="text"
-                value={stock}
-                onChange={(e) => setStock(e.target.value)}
-            />
+                <div className="sm:col-span-4">
+                    <span className="block text-md font-medium leading-6 text-gray-900">Descrição:</span>
+                    <div className="mt-2">
+                        <input 
+                            type="textarea" 
+                            name="Description" 
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)} 
+                            className="w-full text-md px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
+                    </div>
+                </div>
 
-            <button onClick={handleUpdateProduct}>
-                {loading ? "Atualizando Produto..." : "Atualizar Produto"}
-            </button>
+                <div className="sm:col-span-4">
+                    <span  className="block text-md font-medium leading-6 text-gray-900">Preço:</span>
+                    <div className="mt-2">
+                        <input 
+                            name="price" 
+                            type="text"
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)} 
+                            className="w-full text-md px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
+                    </div>
+                </div>
 
-            <button onClick={() => navigate("/all-products")}>
-                Cancelar
-            </button>
+                <div className="sm:col-span-4">
+                    <span className="block text-md font-medium leading-6 text-gray-900">Estoque:</span>
+                    <div className="mt-2">
+                        <input 
+                            id="stock" 
+                            name="stock" 
+                            type="text"
+                            value={stock}
+                            onChange={(e) => setStock(e.target.value)} 
+                            className="w-full text-md px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
+                    </div>
+                </div>
             </div>
-            */
-
-
-            <form>
-                <div class="space-y-12">
-    <div class="border-b border-gray-900/10 pb-12">
-      <h1 class="text-base font-semibold leading-7 text-gray-900">Atualizar Produto</h1>
-
-      <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-
-        <div class="sm:col-span-4">
-          <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Nome:</label>
-          <div class="mt-2">
-            <input 
-                type="text" 
-                name="name"
-                value={name} 
-                onChange={(e) => setName(e.target.value)} 
-                class="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
-          </div>
         </div>
 
-        <div class="sm:col-span-5">
-          <label for="Description" class="block text-sm font-medium leading-6 text-gray-900">Descrição:</label>
-          <div class="mt-2">
-            <input 
-                type="textarea" 
-                name="Description" 
-                value={description}
-                onChange={(e) => setDescription(e.target.value)} 
-                class="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
-          </div>
-        </div>
+        <div className="mt-6 flex items-center justify-end gap-x-6">
+            <button 
+                type="button" 
+                onClick={() => navigate("/all-products")}
+                className="rounded-md bg-slate-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-slate-500 select-none rounded-lg bg-blue-gray-900/10 py-3 px-6 text-center align-middle font-sans text-xs font-bold text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
+                    Cancelar
+            </button>
 
-        <div class="sm:col-span-4">
-          <label for="price" class="block text-sm font-medium leading-6 text-gray-900">Preço:</label>
-          <div class="mt-2">
-            <input 
-                name="price" 
-                type="text"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)} 
-                class="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
-          </div>
-        </div>
 
-        <div class="sm:col-span-4">
-          <label for="stock" class="block text-sm font-medium leading-6 text-gray-900">Estoque:</label>
-          <div class="mt-2">
-            <input 
-                id="stock" 
-                name="stock" 
-                type="text"
-                value={stock}
-                onChange={(e) => setStock(e.target.value)} 
-                class="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
-          </div>
-        </div>
-      </div>
+            <div>
+
+            <button 
+                type="button" 
+                onClick={() => openModal(obj)}
+                className="rounded-md bg-slate-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-slate-500 select-none rounded-lg bg-blue-gray-900/10 py-3 px-6 text-center align-middle font-sans text-xs font-bold text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
+                    abrir Modal
+            </button>
+
+            { mensagem && (<ModalComponent closeModal={closeModal} ref={dialogRef} item={mensagem} />)}
+            
+
+            </div>
+
+            <button           
+                type="button"   
+                onClick={handleUpdateProduct} 
+                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 select-none rounded-lg bg-blue-gray-900/10 py-3 px-6 text-center align-middle font-sans text-xs font-bold text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
+                {loading ? "Atualizando Produto..." : "Atualizar Produto"}
+            </button>            
+        </div>  
+        
     </div>
-  </div>
-
-  <div class="mt-6 flex items-center justify-end gap-x-6">
-    <button 
-        type="button" 
-        onClick={() => navigate("/all-products")}
-        className="rounded-md bg-slate-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-slate-500 select-none rounded-lg bg-blue-gray-900/10 py-3 px-6 text-center align-middle font-sans text-xs font-bold text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
-            Cancelar
-    </button>
-
-    <button 
-        type="submit"
-        onClick={handleUpdateProduct} 
-        className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 select-none rounded-lg bg-blue-gray-900/10 py-3 px-6 text-center align-middle font-sans text-xs font-bold text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
-        {loading ? "Atualizando Produto..." : "Atualizar Produto"}
-    </button>
-  </div>
-</form>
 
         
     );
