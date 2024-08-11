@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { login } from "../service/UserService";
 
 function Login() {
 
@@ -21,23 +22,20 @@ function Login() {
     
     const handleLogin = async () => {
         setLoading(true);
-        setError(null);
+        setError(null);      
 
-    try {
-        const response = await axios.post("https://interview.t-alpha.com.br/api/auth/login", {
-            taxNumber,
-            password
-        });
+    try {                        
+        const response = await login({taxNumber, password});
 
-        if (response.data?.data?.token) {
-            localStorage.setItem("token", response.data.data.token);
-            navigate("/all-products");
-        } else {
-            throw new Error("Falha na autenticação, verifique suas credenciais.")
-        }
-    } catch(err) {
-        console.log(err);
-        setError("Erro na requisição, tente novamente mais tarde: " + err);
+        if (!response.data?.data?.token)
+          throw new Error('Token de autenticacao inválido')
+        console.log(response.data.data.token)
+
+        localStorage.setItem("token", response.data.data.token);
+        navigate("/all-products");
+         
+    } catch(err) {        
+        setError(err);
     } finally {
         setLoading(false);
     }
