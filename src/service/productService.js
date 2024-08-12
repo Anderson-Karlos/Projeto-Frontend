@@ -32,37 +32,31 @@ export async function createProduct({name, description, price, stock}) {
                 },
             });
 
-            console.log("Response: " + JSON.stringify(response))       
-
             return response;
 
         } catch(err) {
             console.log(err);
-            throw new Error('Erro ao criar produto: ' + err);
+            throw new Error(err);
         }
 }
 
 export async function getAllProducts() {
     const token = localStorage.getItem("token");           
-
     const response = await axios.get(URL_BASE + "/products/get-all-products", {
         headers: {
             Authorization: `Bearer ${token}`,
         },
-    });
-    
-    console.log(response)
+    });    
 
     if (response.status !== HTTP_STATUS.OK)
-        throw new Error('Erro 1')
+        throw new Error('Status de resposta inesperado ao buscar todos os produtos: ' + response.status)
 
     return response.data?.data?.products;
 
 }
 
 export async function getProductsById(id) {    
-        const token = localStorage.getItem("token");
-    
+        const token = localStorage.getItem("token");    
         const response = await axios.get(URL_BASE + `/products/get-one-product/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -77,9 +71,7 @@ export async function getProductsById(id) {
         return response.data?.data?.product;
 }
 
-export async function updateProduct(id, product) {  
-    console.log('id : '+ id)  
-    console.log(product)  
+export async function updateProduct(id, product) {      
     const token = localStorage.getItem("token");        
 
     const response = await axios.patch(URL_BASE + `/products/update-product/${id}`, product,
@@ -99,17 +91,16 @@ export async function updateProduct(id, product) {
     return true;
 }
 
-export async function deleteProduct(idProduto) {
-    
+export async function deleteProduct(idProduto) {    
     const token = localStorage.getItem("token");    
-    const response = await axios.delete(URL_BASE `/products/delete-product/${idProduto}`, {
+    const response = await axios.delete(URL_BASE + `/products/delete-product/${idProduto}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
     });
 
-    if (response.status !== HTTP_STATUS.OK)
-        throw new Error('Status não retornou ok: ' + response.status)
+    if (response.status !== HTTP_STATUS.NO_CONTENT)
+        throw new Error(`Status ${response.status} retornando, diferente do esperado:`)
 
     return true
 

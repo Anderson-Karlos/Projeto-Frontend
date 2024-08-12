@@ -68,7 +68,7 @@ function UpdateProduct() {
         try {                        
             const response = await updateProduct(id, dados);
             console.log(response);
-            const obj = {titulo: 'Anderson', mensagem: 'é viado', rota: '/all-products'};  console.log("Response: " + JSON.stringify(response));
+            const obj = {titulo: 'Confirmação', mensagem: 'Deseja realmente atualizar produto?', rota: '/all-products'};  console.log("Response: " + JSON.stringify(response));
 
             if (response) 
                 openModal(obj)
@@ -79,7 +79,7 @@ function UpdateProduct() {
         } finally {
             setLoading(false);
         }
-    };
+    };    
     
 
     return (
@@ -141,21 +141,13 @@ function UpdateProduct() {
             </div>
         </div>
 
-        <div className="mt-6 flex items-center justify-end gap-x-6">
+        <div className="mt-6 flex items-center justify-end gap-5 ">
             <button 
                 type="button" 
                 onClick={() => navigate("/all-products")}
                 className="rounded-md bg-slate-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-slate-500 select-none rounded-lg bg-blue-gray-900/10 py-3 px-6 text-center align-middle font-sans text-xs font-bold text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
                     Cancelar
-            </button>
-
-
-            <div>            
-
-            { mensagem && (<ModalComponent closeModal={closeModal} ref={dialogRef} item={mensagem} />)}
-            
-
-            </div>
+            </button>                         
 
             <button           
                 type="button"   
@@ -164,6 +156,8 @@ function UpdateProduct() {
                 {loading ? "Atualizando Produto..." : "Atualizar Produto"}
             </button>            
         </div>  
+
+        { mensagem && (<ModalComponent closeModal={closeModal} ref={dialogRef} item={mensagem} />)}
         
     </div>
 

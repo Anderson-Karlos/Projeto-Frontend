@@ -2,59 +2,58 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { login } from "../service/UserService";
-import  InputMask  from "react-input-mask"
+import InputMask from "react-input-mask"
 
 function Login() {
 
-    const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-    const togglePasswordVisibility = () => {
-      setShowPassword(prevState => !prevState);
-    };
+  const togglePasswordVisibility = () => {
+    setShowPassword(prevState => !prevState);
+  };
 
-    const [taxNumber, setTaxNumber] = useState('');
-    const [password, setPassword] = useState('');
-    
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+  const [taxNumber, setTaxNumber] = useState('');
+  const [password, setPassword] = useState('');
 
-    const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-    const [isCpf, setIsCpf] = useState(true);
+  const navigate = useNavigate();
 
-    
-    const handleLogin = async () => {
-        setLoading(true);
-        setError('');      
+  const [isCpf, setIsCpf] = useState(true);
 
-    try {                        
-        const response = await login({taxNumber, password});
 
-        if (!response.data?.data?.token)
-          throw new Error('Token de autenticacao inválido')
-        console.log(response.data.data.token)
+  const handleLogin = async () => {
+    setLoading(true);
+    setError('');
 
-        localStorage.setItem("token", response.data.data.token);
-        navigate("/all-products");
-         
-    } catch(err) {        
-        setError(err);
+    try {
+      const response = await login({ taxNumber, password });
+
+      if (!response.data?.data?.token)
+        throw new Error('Token de autenticacao inválido')
+      console.log(response.data.data.token)
+
+      localStorage.setItem("token", response.data.data.token);
+      navigate("/all-products");
+
+    } catch (err) {
+      setError(err);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
-function handleChangeCpfCnpj(value) {   
-  setIsCpf(value.length <= 11);
-  
-}
+  function handleChangeCpfCnpj(value) {
+    setIsCpf(value.length <= 11);
 
-function onChangeMultple(value) {
-  const justNumbers = value.replace(/\D/g, '');  
-  handleChangeCpfCnpj(justNumbers);  
-  console.log(justNumbers)
-  setTaxNumber(justNumbers);
-}
+  }
+
+  function onChangeMultple(value) {
+    const justNumbers = value.replace(/\D/g, '');
+    handleChangeCpfCnpj(justNumbers);
+    setTaxNumber(justNumbers);
+  }
 
   return (
 
@@ -65,32 +64,32 @@ function onChangeMultple(value) {
           <p className="text-gray-400">
             Ainda não tem uma conta?{' '}
 
-            <button 
-              className="text-sm text-purple-700 hover:text-purple-700" 
+            <button
+              className="text-sm text-purple-700 hover:text-purple-700"
               onClick={() => navigate("/register")}>
-                Cadastre-se
-            </button>        
+              Cadastre-se
+            </button>
           </p>
         </div>
 
         <div className="space-y-6">
-        <div>
-          <InputMask
-            mask={isCpf ? "999.999.999-99" : "99.999.999/9999-99"}
-            value={taxNumber} 
-            onChange={(e) => onChangeMultple(e.target.value)} 
-            placeholder="Insira seu CPF ou CNPJ"
-            className="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400"
-          >
-            {(inputProps) => <input {...inputProps} type="text" id="cpfCnpj"/>}
-          </InputMask>
-        </div>
+          <div>
+            <InputMask
+              mask={isCpf ? "999.999.999-99" : "99.999.999/9999-99"}
+              value={taxNumber}
+              onChange={(e) => onChangeMultple(e.target.value)}
+              placeholder="Insira seu CPF ou CNPJ"
+              className="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400"
+            >
+              {(inputProps) => <input {...inputProps} type="text" id="cpfCnpj" />}
+            </InputMask>
+          </div>
 
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
               value={password}
-              onChange={(e) => { setPassword(e.target.value)}}              
+              onChange={(e) => { setPassword(e.target.value) }}
               placeholder="Password"
               className="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400"
             />
@@ -131,12 +130,12 @@ function onChangeMultple(value) {
             </div>
           </div>
 
-          <div>            
+          <div>
             <button
-            type="submit"
-            className="w-full flex justify-center bg-purple-800 hover:bg-purple-700 text-gray-100 p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500"
-             onClick={handleLogin}>
-                {loading ? "Carregando..." : "Entrar"}
+              type="submit"
+              className="w-full flex justify-center bg-purple-800 hover:bg-purple-700 text-gray-100 p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500"
+              onClick={handleLogin}>
+              {loading ? "Carregando..." : "Entrar"}
             </button>
 
           </div>

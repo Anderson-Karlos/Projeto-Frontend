@@ -5,8 +5,7 @@ const URL_BASE = 'https://interview.t-alpha.com.br/api';
  export async function login({taxNumber, password}) {
     let erro = '';
 
-    try {
-        
+    try {        
         if (!taxNumber) 
             erro = 'Usuário inválido'
         else if (!password) 
@@ -15,8 +14,7 @@ const URL_BASE = 'https://interview.t-alpha.com.br/api';
         if (erro)
             throw new Error(erro);
 
-        const response = await axios.post(URL_BASE + "/auth/login", {taxNumber, password});
-    
+        const response = await axios.post(URL_BASE + "/auth/login", {taxNumber, password});    
         if (response.data?.data?.token) {
             localStorage.setItem("token", response.data.data.token);            
         } else {
@@ -40,7 +38,7 @@ export async function createUser(dados) {
         phone: dados.phone,
         password: dados.password
     }
-    console.log("dados: " + JSON.stringify(dados))
+    
     try {        
          if (!dados.name)
              erro = 'Nome invalido'
@@ -57,8 +55,6 @@ export async function createUser(dados) {
             throw new Error(erro);
 
         const response = await axios.post(URL_BASE + "/auth/register", dados);
-        console.log(response);
-
         if (response?.status == 201)
             return response;
         

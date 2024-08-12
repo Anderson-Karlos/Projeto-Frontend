@@ -1,15 +1,22 @@
 import React, { forwardRef } from 'react';
 import { useNavigate } from "react-router-dom";
 
-const ModalComponent = forwardRef(({ closeModal, item }, ref) => {
+const ModalComponent = forwardRef(({ closeModal, item, onConfirm }, ref) => {
 
   const navigate = useNavigate();
 
 
-  const handle = () => {
+  const handle = (() => {
+    if (onConfirm)
+       onConfirm();  
+    
     closeModal();
-    navigate(item.rota);    
-  }
+    console.log(item)
+
+    if (item.rota)
+      navigate(item.rota);    ;     
+    
+  })
 
 
   console.log('Executando Modal')
@@ -37,8 +44,16 @@ const ModalComponent = forwardRef(({ closeModal, item }, ref) => {
               onClick={handle}
               className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              Ok
+              Confirmar
             </button>
+
+            <button
+              onClick={closeModal}
+              className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+            >
+              Cancelar
+            </button>
+
           </div>
         </div>
       </div>

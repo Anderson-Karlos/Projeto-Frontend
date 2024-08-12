@@ -3,20 +3,18 @@
 @tailwind utilities;
 
 
-
-.borda-blue {
+.border-blue {
     border: 1px solid blue
   }
   
-  .borda-black {
-    border: 1px solid black
-  }
-  
-  .borda-red {
-    border: 1px solid red
-  }
-  
-  .borda-green {
-    border: 1px solid green
-  }
-  
+.border-black {
+  border: 1px solid black
+}
+
+.border-red {
+  border: 1px solid red
+}
+
+.border-green {
+  border: 1px solid green
+}
