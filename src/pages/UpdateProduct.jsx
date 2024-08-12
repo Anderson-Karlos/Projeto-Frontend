@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { json, useNavigate, useParams } from "react-router-dom";
 import ModalComponent from "../components/ModalComponent";
+import { updateProduct,  getProductsById } from "../service/productService";
 
 function UpdateProduct() {
     const { id } = useParams();
@@ -18,9 +19,15 @@ function UpdateProduct() {
 
 
     const openModal = (objMensagem) => {
-        setMensagem(objMensagem)
-        dialogRef.current.showModal();
+        setMensagem(objMensagem);
+        setIsModalVisible(true);
+        setTimeout(() => {
+            if (dialogRef.current) {
+                dialogRef.current.showModal();
+            }
+        }, 0);  // Usando um pequeno delay para garantir a renderização antes do showModal
     }
+    
 
     const closeModal = () => {
         dialogRef.current.close()
@@ -28,34 +35,24 @@ function UpdateProduct() {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
+    useEffect(() => {        
         const fetchProduct = async () => {
             try {
-                const token = localStorage.getItem("token");
-                console.log("tokeeeennn / " + token)
-                const response = await axios.get(`https://interview.t-alpha.com.br/api/products/get-one-product/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    },
-                });
-                const product = response.data.data.product;                
+                const product = await getProductsById(id)
+                
                 setName(product.name);
                 setDescription(product.description);
                 setPrice(product.price);
                 setStock(product.stock);
             } catch(err) {
                 console.log(err)
-                setError("Erro ao carregar dados do produto.");
+                setError("Erro ao carregar dados do produto: " + err);
             }
         };
 
-        fetchProduct();
+        fetchProduct();       
 
-        if (isModalVisible && dialogRef.current) {
-            dialogRef.current.showModal(); 
-          }
-
-    }, [id, isModalVisible]);
+    }, [id, getProductsById]);
 
     const handleUpdateProduct = async () => {
         setLoading(true);
@@ -68,33 +65,17 @@ function UpdateProduct() {
             stock: Number(stock) 
         }
 
-    console.log("Entrou aqui");
+        try {                        
+            const response = await updateProduct(id, dados);
+            console.log(response);
+            const obj = {titulo: 'Anderson', mensagem: 'é viado', rota: '/all-products'};  console.log("Response: " + JSON.stringify(response));
 
-        console.log("dados: " + JSON.stringify(dados))
-
-        try {
-            const token = localStorage.getItem("token");
-            //vericar
-            const response = await axios.patch(`https://interview.t-alpha.com.br/api/products/update-product/${id}`, dados,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-
-        const obj = {titulo: 'Anderson', mensagem: 'é viado', rota: '/all-products'};  console.log("Response: " + JSON.stringify(response));
-
-        if (response.status == 204) {                                   
-            console.log("deu certo")                    
-            openModal(obj)
-        } else {
-            setError("Erro ao atualizar produto. Por favor, tente novamente.");
-        }
+            if (response) 
+                openModal(obj)
+        
         } catch(err) {
-            console.log("catch do erro: " + JSON.stringify(err))
-            setError("Erro na requisição. Por favor, tente novamente mais tarde.");
+            console.log(err)    
+            setError("Erro ao atualizar produto. Por favor, tente novamente.");
         } finally {
             setLoading(false);
         }
@@ -169,14 +150,7 @@ function UpdateProduct() {
             </button>
 
 
-            <div>
-
-            <button 
-                type="button" 
-                onClick={() => openModal(obj)}
-                className="rounded-md bg-slate-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-slate-500 select-none rounded-lg bg-blue-gray-900/10 py-3 px-6 text-center align-middle font-sans text-xs font-bold text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
-                    abrir Modal
-            </button>
+            <div>            
 
             { mensagem && (<ModalComponent closeModal={closeModal} ref={dialogRef} item={mensagem} />)}
             

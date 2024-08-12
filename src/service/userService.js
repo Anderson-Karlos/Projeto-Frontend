@@ -42,21 +42,21 @@ export async function createUser(dados) {
     }
     console.log("dados: " + JSON.stringify(dados))
     try {        
-        // if (!name)
-        //     erro = 'Nome invalido'
-        // else if (!taxNumber) 
-        //     erro = 'Usuário inválido'
-        // else if (!mail)
-        //     erro = 'E-mail inválido'
-        // else if (!phone)
-        //     erro = 'Telefone inválido'
-        // else if (!password) 
-        //     erro = 'Senha inválida'
+         if (!dados.name)
+             erro = 'Nome invalido'
+         else if (!dados.taxNumber) 
+             erro = 'Usuário inválido'
+         else if (!dados.mail)
+             erro = 'E-mail inválido'
+         else if (!dados.phone)
+            erro = 'Telefone inválido'
+         else if (!dados.password) 
+             erro = 'Senha inválida'
         
         if (erro)
             throw new Error(erro);
 
-        const response = await axios.post(URL_BASE + "/auth/register", dados_usuario);
+        const response = await axios.post(URL_BASE + "/auth/register", dados);
         console.log(response);
 
         if (response?.status == 201)

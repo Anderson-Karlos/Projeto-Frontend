@@ -6,6 +6,7 @@ import Signup from "./pages/Signup.jsx"
 import CreateProduct from "./pages/CreateProduct.jsx"
 import UpdateProduct from "./pages/UpdateProduct.jsx";
 import DetailProduct from "./pages/DetailProduct.jsx";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
 
 function App() {
   return (
@@ -63,6 +64,9 @@ function App() {
              * Chamada API para atualizar o produto com os novos dados
              */}
             <Route path="/update-product/:id" Component={UpdateProduct} /> {/* Patch */ }
+
+            <Route path="*" Component={NotFoundPage} />
+
           </Routes>
       </BrowserRouter>
     </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { login } from "../service/UserService";
+import  InputMask  from "react-input-mask"
 
 function Login() {
 
@@ -11,18 +12,20 @@ function Login() {
       setShowPassword(prevState => !prevState);
     };
 
-    const [taxNumber, setTaxNumber] = useState(null);
-    const [password, setPassword] = useState(null);
+    const [taxNumber, setTaxNumber] = useState('');
+    const [password, setPassword] = useState('');
     
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState('');
 
     const navigate = useNavigate();
+
+    const [isCpf, setIsCpf] = useState(true);
 
     
     const handleLogin = async () => {
         setLoading(true);
-        setError(null);      
+        setError('');      
 
     try {                        
         const response = await login({taxNumber, password});
@@ -41,6 +44,17 @@ function Login() {
     }
 };
 
+function handleChangeCpfCnpj(value) {   
+  setIsCpf(value.length <= 11);
+  
+}
+
+function onChangeMultple(value) {
+  const justNumbers = value.replace(/\D/g, '');  
+  handleChangeCpfCnpj(justNumbers);  
+  console.log(justNumbers)
+  setTaxNumber(justNumbers);
+}
 
   return (
 
@@ -51,20 +65,26 @@ function Login() {
           <p className="text-gray-400">
             Ainda não tem uma conta?{' '}
 
-            <button className="text-sm text-purple-700 hover:text-purple-700" onClick={() => navigate("/register")}>Cadastre-se</button>        
+            <button 
+              className="text-sm text-purple-700 hover:text-purple-700" 
+              onClick={() => navigate("/register")}>
+                Cadastre-se
+            </button>        
           </p>
         </div>
 
         <div className="space-y-6">
-          <div>
-            <input
-                type="text" 
-                value={taxNumber} 
-                onChange={(e) => { setTaxNumber(e.target.value)}} 
-                placeholder="insira seu CPF ou CNPJ"                        
-                className="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400"
-            />
-          </div>
+        <div>
+          <InputMask
+            mask={isCpf ? "999.999.999-99" : "99.999.999/9999-99"}
+            value={taxNumber} 
+            onChange={(e) => onChangeMultple(e.target.value)} 
+            placeholder="Insira seu CPF ou CNPJ"
+            className="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400"
+          >
+            {(inputProps) => <input {...inputProps} type="text" id="cpfCnpj"/>}
+          </InputMask>
+        </div>
 
           <div className="relative">
             <input
@@ -115,7 +135,7 @@ function Login() {
             <button
             type="submit"
             className="w-full flex justify-center bg-purple-800 hover:bg-purple-700 text-gray-100 p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500"
-             onClick={handleLogin} disable={loading}>
+             onClick={handleLogin}>
                 {loading ? "Carregando..." : "Entrar"}
             </button>
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { getAllProducts, deleteProduct} from "../service/productService";
 
 function Products() {
     const [id, setId] = useState(null);
@@ -13,19 +14,13 @@ function Products() {
     const navigate = useNavigate();
 
     const fetchProducts = async () => {
-        try {
-            const token = localStorage.getItem("token");            
-            console.log('fazendo requisição');
-            const response = await axios.get("https://interview.t-alpha.com.br/api/products/get-all-products", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            console.log("responseeee: " + JSON.stringify(response));
-            setProducts(response.data.data.products);
+        try {            
+            const produtos = await getAllProducts();                 
+            setProducts(produtos);
             
         } catch (err) {
-            setError("Erro ao buscar produtos.");
+            console.log(err)
+            setError("Erro ao buscar produtos: " + err);
         } finally {
             setLoading(false);
         }
@@ -39,17 +34,17 @@ function Products() {
     if (error) return <p>{error}</p>;
 
     const handleDeleteProduct = async (idProduto) => {
-        try {
-            const token = localStorage.getItem("token");
-            await axios.delete(`https://interview.t-alpha.com.br/api/products/delete-product/${idProduto}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            fetchProducts();
-            //navigate("/all-products");
+        try {            
+            const created = await deleteProduct(idProduto)
+
+            if (!created)
+                throw new Error ()
+            
+            fetchProducts();                            
+                    
         } catch (err) {
-            setError("Erro ao excluir o produto. Tente novamente mais tarde.");
+            console.log(err)
+            setError("Erro ao excluir o produto: " + err);
         }
     };
 
