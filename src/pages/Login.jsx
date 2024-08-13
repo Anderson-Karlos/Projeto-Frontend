@@ -1,15 +1,14 @@
-import { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { login } from "../service/UserService";
-import InputMask from "react-input-mask"
+import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../service/userService';
+import InputMask from 'react-input-mask';
 
 function Login() {
-
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
-    setShowPassword(prevState => !prevState);
+    setShowPassword((prevState) => !prevState);
   };
 
   const [taxNumber, setTaxNumber] = useState('');
@@ -22,7 +21,6 @@ function Login() {
 
   const [isCpf, setIsCpf] = useState(true);
 
-
   const handleLogin = async () => {
     setLoading(true);
     setError('');
@@ -31,12 +29,11 @@ function Login() {
       const response = await login({ taxNumber, password });
 
       if (!response.data?.data?.token)
-        throw new Error('Token de autenticacao inválido')
-      console.log(response.data.data.token)
+        throw new Error('Token de autenticacao inválido');
+      console.log(response.data.data.token);
 
-      localStorage.setItem("token", response.data.data.token);
-      navigate("/all-products");
-
+      localStorage.setItem('token', response.data.data.token);
+      navigate('/all-products');
     } catch (err) {
       setError(err);
     } finally {
@@ -46,7 +43,6 @@ function Login() {
 
   function handleChangeCpfCnpj(value) {
     setIsCpf(value.length <= 11);
-
   }
 
   function onChangeMultple(value) {
@@ -56,17 +52,16 @@ function Login() {
   }
 
   return (
-
     <div className="flex justify-center self-center z-10">
       <div className="p-12 bg-white mx-auto rounded-3xl w-96">
         <div className="mb-7">
           <h3 className="font-semibold text-2xl text-gray-800">Sign In</h3>
           <p className="text-gray-400">
             Ainda não tem uma conta?{' '}
-
             <button
               className="text-sm text-purple-700 hover:text-purple-700"
-              onClick={() => navigate("/register")}>
+              onClick={() => navigate('/register')}
+            >
               Cadastre-se
             </button>
           </p>
@@ -75,13 +70,15 @@ function Login() {
         <div className="space-y-6">
           <div>
             <InputMask
-              mask={isCpf ? "999.999.999-99" : "99.999.999/9999-99"}
+              mask={isCpf ? '999.999.999-99' : '99.999.999/9999-99'}
               value={taxNumber}
               onChange={(e) => onChangeMultple(e.target.value)}
               placeholder="Insira seu CPF ou CNPJ"
               className="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400"
             >
-              {(inputProps) => <input {...inputProps} type="text" id="cpfCnpj" />}
+              {(inputProps) => (
+                <input {...inputProps} type="text" id="cpfCnpj" />
+              )}
             </InputMask>
           </div>
 
@@ -89,14 +86,18 @@ function Login() {
             <input
               type={showPassword ? 'text' : 'password'}
               value={password}
-              onChange={(e) => { setPassword(e.target.value) }}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
               placeholder="Password"
               className="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400"
             />
             <div className="flex items-center absolute inset-y-0 right-0 mr-3 text-sm leading-5">
               <svg
                 onClick={togglePasswordVisibility}
-                className={`h-4 text-purple-700 cursor-pointer ${showPassword ? 'hidden' : 'block'}`}
+                className={`h-4 text-purple-700 cursor-pointer ${
+                  showPassword ? 'hidden' : 'block'
+                }`}
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 576 512"
@@ -109,7 +110,9 @@ function Login() {
 
               <svg
                 onClick={togglePasswordVisibility}
-                className={`h-4 text-purple-700 cursor-pointer ${showPassword ? 'block' : 'hidden'}`}
+                className={`h-4 text-purple-700 cursor-pointer ${
+                  showPassword ? 'block' : 'hidden'
+                }`}
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 640 512"
@@ -134,16 +137,15 @@ function Login() {
             <button
               type="submit"
               className="w-full flex justify-center bg-purple-800 hover:bg-purple-700 text-gray-100 p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500"
-              onClick={handleLogin}>
-              {loading ? "Carregando..." : "Entrar"}
+              onClick={handleLogin}
+            >
+              {loading ? 'Carregando...' : 'Entrar'}
             </button>
-
           </div>
         </div>
       </div>
     </div>
   );
-
 }
 
 export default Login;
