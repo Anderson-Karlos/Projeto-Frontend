@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../service/userService';
 import InputMask from 'react-input-mask';
@@ -15,7 +14,7 @@ function Login() {
   const [password, setPassword] = useState('');
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [, setError] = useState('');
 
   const navigate = useNavigate();
 

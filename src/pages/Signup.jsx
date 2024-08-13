@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { createUser } from '../service/userService';
 
@@ -11,7 +10,7 @@ function Signup() {
   const [password, setPassword] = useState(null);
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -56,7 +55,7 @@ function Signup() {
           <div className="mt-12 gap-y-8 flex flex-col w-1/2">
             <div className="sm:col-span-4">
               <label
-                for="name"
+                htmlFor="name"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Nome:
@@ -74,7 +73,7 @@ function Signup() {
 
             <div className="sm:col-span-4">
               <label
-                for="Description"
+                htmlFor="Description"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 CPF / CNPJ:
@@ -93,7 +92,7 @@ function Signup() {
 
             <div className="sm:col-span-4">
               <label
-                for="price"
+                htmlFor="price"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 E-mail:
@@ -112,7 +111,7 @@ function Signup() {
 
             <div className="sm:col-span-4">
               <label
-                for="price"
+                htmlFor="price"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Telefone:
@@ -131,7 +130,7 @@ function Signup() {
 
             <div className="sm:col-span-4">
               <label
-                for="stock"
+                htmlFor="stock"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Senha:
@@ -151,11 +150,11 @@ function Signup() {
         </div>
       </div>
 
-      <div class="mt-6 flex items-center justify-end gap-x-6 px-6">
+      <div className="mt-6 flex items-center justify-end gap-x-6 px-6">
         <button
           type="button"
           onClick={() => navigate('/')}
-          class="text-sm font-semibold leading-6 text-gray-900"
+          className="text-sm font-semibold leading-6 text-gray-900"
         >
           Cancelar
         </button>
